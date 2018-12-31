@@ -27,7 +27,7 @@ function file_list($UPLOAD_DIR) //get file list
             closedir($dh);
             return $files;
         } else return array();
-    } else return array("debug"=>$UPLOAD_DIR);
+    } else return array();
 }
 
 function delete_file($path) { //return is success
