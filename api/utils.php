@@ -23,7 +23,6 @@ function file_list($UPLOAD_DIR) //get file list
                 $file['size'] = filesize($UPLOAD_DIR."/".$name);
                 $file['time'] = $time;
                 $file['key'] = $time;
-                $file['url'] = $URL.'/'.$name;
                 array_push($files,$file);
             }
             closedir($dh);
