@@ -1,13 +1,13 @@
-import { Modal, Button } from 'antd';
+import { Modal, Input } from 'antd';
 import React from 'react';
-import UploadDragger from './UploadDragger'
 
 
-class UploadModal extends React.Component {
+class LoginPanel extends React.Component {
   state = {
     ModalText: 'file max size 100M',
     visible: false,
     confirmLoading: false,
+    input:'',
   }
 
   showModal = () => {
@@ -17,6 +17,8 @@ class UploadModal extends React.Component {
   }
 
   handleOk = () => {
+    const token = this.state.input;
+    this.props.tokenAuth(token);
     this.setState({
       visible: false,
     });
@@ -29,30 +31,28 @@ class UploadModal extends React.Component {
     });
   }
 
+  handleInputChange = (e)=>{
+      this.setState({input:e.target.value})
+  }
+
   render() {
     const { visible, confirmLoading } = this.state;
     return (
-      <div>
-        <div style={{margin:10,textAlign:'center'}}>
-        <Button type="primary" onClick={this.showModal}>
-          Select File
-        </Button>
-        &nbsp;&nbsp;&nbsp;
-        Max File Size: <span>{this.props.maxSize}</span>
-        </div>
+      <span>
+        <a href="javascript:;" onClick={this.showModal}>Login</a>
         <Modal
-          title="Upload"
+          title="Admin Login"
           visible={visible}
           onOk={this.handleOk}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
         >
-        <UploadDragger updateFiles={this.props.updateFiles.bind(this)}/>
+        <Input onChange={this.handleInputChange.bind(this)} placeholder="input admin token" ref="tokenInput"/>
         </Modal>
-      </div>
+      </span>
     );
   }
     
 }
 
-export default UploadModal
+export default LoginPanel

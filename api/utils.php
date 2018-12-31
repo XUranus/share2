@@ -14,14 +14,16 @@ function file_list($UPLOAD_DIR) //get file list
         if($dh = opendir($UPLOAD_DIR)){
             while(($name = readdir($dh))){
                 if(!is_dir($name)) // not allow directory
-                    array_push($names,$name); 
+                    $names[$name] = filemtime($UPLOAD_DIR.'/'.$name); 
             }
-            foreach($names as $index => $name){ // generate files{file{},...} json 
+            arsort($names);
+            foreach($names as $name => $time){ // generate files{file{},...} json 
                 $file = array();
                 $file['name'] = $name;
                 $file['size'] = filesize($UPLOAD_DIR."/".$name);
-                $file['time'] = filectime($UPLOAD_DIR."/".$name);
-                $file['key'] = $index;
+                $file['time'] = $time;
+                $file['key'] = $time;
+                $file['url'] = $URL.'/'.$name;
                 array_push($files,$file);
             }
             closedir($dh);

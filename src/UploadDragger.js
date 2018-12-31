@@ -1,5 +1,5 @@
 import { Upload, Icon, message } from 'antd';
-import React, { Component } from 'react';
+import React from 'react';
 import SERVER_URL from './config'
 const Dragger = Upload.Dragger;
 

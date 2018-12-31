@@ -27,14 +27,6 @@ class FileList extends Component {
     return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")   
   }
 
-  preHandle = (data)=>{ //预处理 大小 时间
-    var newData = data;
-    newData.size = this.calSize(data.size);
-    newData.time = this.calDate(data.time);
-    newData.url = SERVER_URL+'/upload/'+data.name;
-    return newData;
-  }
-
   displayClipMessage=()=>{
     message.success('copied to clipboard')
   }
@@ -43,15 +35,20 @@ class FileList extends Component {
     const columns = [{
       title: 'Name',
       key: 'name',
-      render: file => <a href="javascript:;" onClick={this.downloadFile.bind(this,file.name)}>{file.name}</a>,
+      sorter: (a,b) => (a.name.length - b.name.length),
+      render: file => <a href="javascript:void(0)" onClick={this.downloadFile.bind(this,file.name)}>{file.name}</a>,
     }, {
       title: 'Size',
       dataIndex: 'size',
       key: 'size',
+      sorter:(a,b) => (a.size - b.size),
+      render:size => this.calSize(size)
     }, {
       title: 'UploadTime',
       dataIndex: 'time',
       key: 'time',
+      sorter: (a, b) => (a.time - b.time),
+      render: time => this.calDate(time)
     }, {
       title: 'Action',
       key: 'action',
@@ -62,13 +59,13 @@ class FileList extends Component {
           <Clipboard 
             component="a" 
             button-href="javascript:;"
-            data-clipboard-text={file.url}
+            data-clipboard-text={SERVER_URL+'/upload/'+file.name}
             onClick={this.displayClipMessage.bind(this)}
           >
             CopyLink
           </Clipboard>
           <Divider type="vertical" />
-          <a href="javascript:;" onClick={this.deleteFile.bind(this,file.name)}>Delete</a>
+          {this.props.admin?<a href="javascript:;" onClick={this.deleteFile.bind(this,file.name)}>Delete</a>:null}
         </span>
       ),
     }];
@@ -76,7 +73,7 @@ class FileList extends Component {
     
     const data = this.props.data;
     return (
-        <Table columns={columns} dataSource={data.map(this.preHandle)} />
+        <Table columns={columns} dataSource={data} />
     );
   }
 }
